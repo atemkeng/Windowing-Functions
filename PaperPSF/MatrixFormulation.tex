@@ -330,7 +330,7 @@ where $PSF(\mathbf{s}_0)$ is the PSF at the phase tracking center
 and $C(\mathbf{s})$ is the image plane smearing response for a source
 located toward the direction $\mathbf{s}\neq \mathbf{s_0}$, defined as:
 \begin{alignat}{2}
-C(\mathbf{s}) &= \sum_{i=1,j=1}^{n_v\times n_{bl}}w(u_{t_c\nu_c},v_{t_c\nu_c})f_{lm}(u_{t_c\nu_c},v_{t_c\nu_c})\mathcal{F}^{-1}\Bigg\{sinc\frac{\Delta \Psi}{2}sinc\frac{\Delta \Phi}{2}\check{\delta}_{lm}(u_{t\nu}+u_{t_c\nu_c}, v_{t\nu}+v_{t_c\nu_c}).\Bigg\}
+C(\mathbf{s}) &= \sum_{i=1,j=1}^{n_v\times n_{bl}}w(u_{t_i\nu_j},v_{t_i\nu_j})f_{lm}(u_{t_i\nu_j},v_{t_i\nu_j})\mathcal{F}^{-1}\Bigg\{sinc\frac{\Delta \Psi}{2}sinc\frac{\Delta \Phi}{2}\check{\delta}_{lm}(u_{t\nu}+u_{t_i\nu_j}, v_{t\nu}+v_{t_i\nu_j})\Bigg\}.
 \end{alignat}
 Here, $n_v\times n_{bl}$ is the array total number of visibilities with $n_v$ and $n_{bl}$ the number of visibilities per 
 baseline after averaging and the number of baselines respectively.

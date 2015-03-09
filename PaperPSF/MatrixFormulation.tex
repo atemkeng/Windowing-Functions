@@ -207,148 +207,134 @@ perform a direct numerical results.
 \subsection{Quick derivation}
 We will now show how to derived a pseudo PSF  which is based and resolved on the nominal PSF
 but labelled by a set of band-limited integration.
-\subsubsection{Averaging case}
 In order to further optimize the slow derivation of the PSF described above to particularly reduce the computational
 cost, we will need to understand the concept and theory of signal correlation in aperture synthesis.
 It is worth noting in Radio Astronomy community that the cross-correlator output of two elements interferometer
 in response to a source with spectral brightness distribution $I_{\nu}(\mathbf{s})$ as a function of the pointing direction $\mathbf{s}$ 
 is the visibility function defined in Eq.\ref{eq:1} and obtained by integrating
-over the solid angle $d\Omega$ (see Thompson, annnff, ahhhh, jjdkk)
+over the solid angle $d\Omega$ \citep{thompson2008interferometry,taylor1999synthesis}
 \begin{alignat}{2}
-V_{\nu}(\mathbf{b}) =& \int_{\Omega}I_{\nu}(\mathbf{s})e^{\frac{-2\pi\nu i \mathbf{b}\mathbf{s}}{c}}d\Omega, \label{eq:1}
+V_{}(\mathbf{b}) =& \int_{\Omega}I_{\nu}(\mathbf{s})e^{-2\pi i \mathbf{b}\mathbf{s}}d\Omega, \label{eq:1}
 \end{alignat}
-where $\mathbf{b}$  is the so called "\textit{baseline vector}" with module the distance between the two elements
-interferometer and $c$ is the speed of the light. The measurement in Eq.\ref{eq:1} is over the entire 
-surface of the celestial sphere, in practice the measurement is generally taken over a finite surface area of 
-the celestial sphere due to the  
-finite nature of the tracking source and other effects. Assuming that the frequency $\nu$ and the 
-time $t$ change small  enough so that $I_{\nu}(\mathbf{s})$
-remains constant while the complex phase, $\frac{-2\pi\nu i \mathbf{b}\mathbf{s}}{c}$ varies linearly.   Eq.\ref{eq:1} becomes:
+where $\mathbf{b}=\mathbf{b}(t,\nu)=(u_{t\nu}, v_{t\nu}, w_{t\nu})$  is the so called "\textit{baseline vector}" in wavelength
+and with modulus the distance between the two elements
+interferometer. The measurement in Eq.\ref{eq:1} is over the entire 
+surface of the celestial sphere, practically the measurement is generally taken over a finite surface area of 
+the celestial sphere due to the finite nature of the tracking source and other effects. Furthermore, the results is
+averaged over finite time/frequency bins. Supose $\Delta t$ centered at $t_0$ and $\Delta \nu$ centered at $\nu_0$ the 
+time and frequency averaged intervals respectively. 
+Assuming that $\Delta t$ and  $\Delta \nu$ are small  enough so that $I_{\nu}(\mathbf{s})$
+remains constant while the complex phase, $-2\pi i \mathbf{b}\mathbf{s}$ varies linearly.   Eq.\ref{eq:1} becomes:
 \begin{alignat}{2}
-V_{\nu}(\mathbf{b}) =& \frac{1}{\Delta t \Delta \nu}\int\limits_{\Delta \nu}^{}\int\limits_{\Delta t}^{}\bigg[\int\limits_{\Omega}^{}I_{\nu}(\mathbf{s})e^{\frac{-2\pi\nu i \mathbf{b}\mathbf{s}}{c}} d\Omega\bigg] dt d\nu \label{eq:2}\\	    
-		    =& \iint\limits_{-\infty}^{\hspace{.3cm}+\infty}f_{\mathbf{s}}(\mathbf{b})\bigg[\int\limits_{\Omega}^{}I_{\nu}(\mathbf{s})e^{\frac{-2\pi\nu i \mathbf{b}\mathbf{s}}{c}}d\Omega \bigg]dt d\nu  \label{eq:3}.
+V_{}(\mathbf{b}_0) =& \frac{1}{\Delta t \Delta \nu}\iint\limits_{\Delta t \Delta \nu}^{}W_{t_0,\nu_0}(t,\nu)\bigg[\int\limits_{\Omega}^{}I_{\nu}(\mathbf{s})e^{-2\pi i \mathbf{b}\mathbf{s}} d\Omega\bigg] dt d\nu \label{eq:2}\\	    
+		    =& \iint\limits_{uv}^{}W_{\mathbf{b}_0}(\mathbf{b})\bigg[\int\limits_{\Omega}^{}I_{\nu}(\mathbf{s})e^{-2\pi i \mathbf{b}\mathbf{s}}d\Omega \bigg]du dv,  \label{eq:3}
 \end{alignat}
-Here, $f_{\mathbf{s}}(\mathbf{b})$ is the visibilities plane tapering kernel,
-theoretically it is an elliptical function that
-maps the ellipse formed by the baseline.
-Eq.\ref{eq:3} allows us to completely understand that in theory, the integration is over a continuous elliptical arc both
-in frequency and time. 
-In the rest of this paper, Eq.\ref{eq:3} is restricted to the complex visibility
-measured by the two elements interferometer for a point source located towards the direction 
-$\mathbf{s}$ with unitary brightness. A delay correction of $\frac{\mathbf{b}\mathbf{s_0}}{c}$ is 
-generally applied to the signals from the antennas 
-array to steer towards the direction $\mathbf{s_0}$.
-Therefore, the scalar product $\frac{\nu \mathbf{b}(\mathbf{s}-\mathbf{s_0})}{c}=u_{t\nu}l + v_{t\nu}m + w_{t\nu}(\sqrt{1-l^2 - m^2}-1)$
-describes the time difference between the two incoming signals. Note that,
-$u_{t\nu}, v_{t\nu}, w_{t\nu}$ are the components of  $\mathbf{b}$ 
-given in wavelength and $l,m, \sqrt{1-l^2-m^2}-1$ are the components of  $\mathbf{s}-\mathbf{s_0}$ given in radian, describing the 
-three directions cosine. 
-We can write:
-\begin{alignat}{2}
-V_{\nu}(\mathbf{b})  =& \iint\limits_{-\infty}^{\hspace{.3cm}+\infty}f_{lm}(u_{t\nu},v_{t\nu})e^{-2\pi i (u_{t\nu}l+v_{t\nu}m+w_{t\nu}(n-1))}dt d\nu\\
-		      =& \check{f}_{lm}(u_{t\nu},v_{t\nu})\circ \delta(u_{t\nu},v_{t\nu}) \label{eq:4}
-\end{alignat} %\iint\limits_{\inf}^{\inf}
-where $\check{f}_{lm}$ is the Fourier transform of $f_{lm}$ and $\delta(u_{t\nu},v_{t\nu})$ the delta Dirac.
-In practice, the variation is limited to a small finite frequency range, $\Delta \nu$ centered at $\nu_c$ 
-and time range $\Delta t$ centered
-at $t_c$, which implies that we are not integrating over continuous elliptical arcs but on shorts discrete
-segments across time and frequency. In this case,  $f_{lm}(u_{t\nu},v_{t\nu})$ is trouncated over a small region, $\Pi_{lm}(u_{t\nu},v_{t\nu})$ 
-of size $\Delta t \times \Delta \nu$ defined as
-\begin{alignat}{2}
-\Pi_{lm}(u_{t\nu},v_{t\nu}) = \left\{
-\begin{array}{rl}
-1 & \mbox{for $\mathit{ t \times \nu \in  [t_s, t_e]\times [\nu_s, \nu_e]}$}, \\
-0 & \mbox{for $\mathit{ t \times \nu  \notin [t_s, t_e]\times [\nu_s, \nu_e]}$ }
-\end{array}\right.\label{eq:box}
-\end{alignat}
-where $t_s$, $t_e$, $\nu_s$ and $\nu_e$ are the starting times, ending time, starting frequency and ending frequency
- respectively. The Fourier transform, $\check{\Pi}_{lm}(u_{t\nu},v_{t\nu})$ of Eq.\ref{eq:box} is given by
+where the following shorthand notation has been used.
 \begin{alignat*}{2}
-\check{\Pi}_{lm}(u_{t\nu},v_{t\nu})&=sinc\frac{-2\pi t\Delta \nu}{2}sinc\frac{-2\pi\nu\Delta t}{2}
+\hspace{-1cm}\mathbf{b}_0=&\mathbf{b}(t_0,\nu_0)\\
+			 =&(u_{t_0\nu_0}, v_{t_0\nu_0}, w_{t_0\nu_0}),\\
+\hspace{-1cm}W_{\mathbf{b}_0}(\mathbf{b})&=\frac{W_{t_0,\nu_0}(t,\nu)}{\Delta t \Delta \nu}.
 \end{alignat*}
-\vspace{-.5cm}
+ Here, $\mathbf{b}_0$ is the baseline vector at centre
+of a sampling interval and the sampling kernel $W_{\mathbf{b}_0}(\mathbf{b})$ is defined as:
 \begin{alignat}{2}
-				    &\check{\delta}_{lm}(u_{t\nu}+u_{t_c\nu_c}, v_{t\nu}+v_{t_c\nu_c}).
+W_{\mathbf{b}_0}(\mathbf{b})&=\Pi(\mathbf{b}-\mathbf{b}_0)w(\mathbf{b}-\mathbf{b}_0),
 \end{alignat}
-% where,
-% \begin{alignat}{2}
-% \check{\delta}_{lm}(u_{t\nu}+u_{t_c\nu_c}, v_{t\nu}+u_{t_c\nu_c})=e^{-2\pi i (u_{t_c\nu_c}l+v_{t_c\nu_c}m+w_{t_c\nu_c}(n-1))}
-% \end{alignat}
-Let supose that 
+where, $\Pi(\mathbf{b}-\mathbf{b}_0)$ is a windowing function and $w(\mathbf{b}-\mathbf{b}_0)$ a weighting kernel.\\
+
+As previously mentioned, we are interested on PSF's response. Therefore, Eq.\ref{eq:3} is restricted to the
+complex visibility measured by the two elements interferometer for a point source located towards the direction 
+$\mathbf{s}$ with unitary brightness. That said, $I_{\nu}(\mathbf{s})=\delta(\mathbf{b}_0)$ with $\delta$ the Dirac delta. 
+It then follows that Eq\ref{eq:3} can be written as
+\begin{alignat}{2}
+V_{}(\mathbf{b}_0)  =& \iint\limits_{uv}W_{\mathbf{b}_0}(\mathbf{b})\mathbf{*}\delta(\mathbf{b}_0) e^{-2\pi i (u_{t\nu}l+v_{t\nu}m+w_{t\nu}(n-1))}du dv, \label{eq:4}
+\end{alignat} 
+The operator $*$ indicates convolution. Note that Eq.\ref{eq:4} is obtained after a
+delay correction of $\mathbf{b}\mathbf{s_0}$ is  applied to the signals from the antennas 
+array to steer towards the direction $\mathbf{s}_0$ and $\mathbf{b}(\mathbf{s}-\mathbf{s_0})=u_{t\nu}l + v_{t\nu}m + w_{t\nu}(n-1)$
+describes the time difference between the two incoming signals. The three directions cosine $l,m$ and $n-1$ 
+are  components of  $\mathbf{s}-\mathbf{s_0}$ given in radian with $n=\sqrt{1-l^2-m^2}$. For an extensive Discussion, see \citep{thompson2008interferometry,taylor1999synthesis}\\
+
+Eq.\ref{eq:4} is two dimensional Fourier transform, making used of the convolution theorem which the litterature 
+states that the Fourier transform of the product of two functions result to a convolution and vice-versa, the following
+expansion is valid
+\begin{alignat}{2}
+V_{}(\mathbf{b}_0)  =& \mathcal{F}\Big\{W_{\mathbf{b}_0}(\mathbf{b})\Big\}\mathcal{F}\Big\{\delta(\mathbf{b}_0)\Big\} \\
+		    =& \Bigg[\mathcal{F}\Big\{\Pi(\mathbf{b}-\mathbf{b}_0)\Big\}*\mathcal{F}\Big\{w(\mathbf{b}-\mathbf{b}_0)\Big\}\Bigg]\mathcal{F}\Big\{\delta(\mathbf{b}_0)\Big\}\\
+		    =& C_{lm}(\mathbf{b}_0)\Bigg[\mathcal{F}\Big\{\Pi(\mathbf{b})\Big\}*\mathcal{F}\Big\{w(\mathbf{b})\Big\}\Bigg]\mathcal{F}\Big\{\delta(\mathbf{b}_0)\Big\}   \label{eq:5}
+\end{alignat}
+The symbol $\mathcal{F}$ denotes the Fourier transform and  $C_{lm}(\mathbf{b}_0)$ is obtained after we had apply the 
+shifted Fourier transform properties. In other words, $C_{lm}(\mathbf{b}_0)$ is defined as
 \begin{alignat*}{2}
-f^{\Pi}_{lm}(u_{t\nu},v_{t\nu})=\Pi_{lm}(u_{t\nu},v_{t\nu})w(u_{t\nu},v_{t\nu})f^{}_{lm}(u_{t\nu},v_{t\nu}),
+C_{lm}(\mathbf{b}_0) &=e^{-2\pi i (u_{t_0\nu_0}l+v_{t_0\nu_0}m+w_{t_0\nu_0}(n-1))}
 \end{alignat*}
-is the trouncated version of  $f_{lm}(u_{t\nu},v_{t\nu})$ including a weighting kernel $w(u_{t\nu},v_{t\nu})$ with Fourier 
-transform $\check{w}(u_{t\nu},v_{t\nu})$. Following the 
-analogy, $f^{\Pi}_{lm}(u_{t\nu},v_{t\nu})$ is of size $\Delta t \times \Delta \nu$.
-We have: %thus over a square taper. Eq.\ref{eq:4} becomes:
-\begin{alignat}{2}
-V_{\nu}(\mathbf{b}) =& \check{f}^{\Pi}_{lm}(u_{t\nu},v_{t\nu})\circ\delta(u_{t\nu},v_{t\nu})\\
-					 %=& \frac{1}{\Delta \nu \Delta t}\int_{\nu_c - \frac{\Delta \nu}{2}}^{\nu_c + \frac{\Delta \nu}{2}}\int_{t_c - \frac{\Delta t}{2}}^{t_c + \frac{\Delta t}{2}}
-%e^{-2\pi i (u_{t\nu}l+v_{t\nu}m+w_{t\nu}(n-1))} dt d\nu\\
-		    =& \Bigg[\check{\Pi}_{lm}(u_{t\nu},v_{t\nu})\circ \check{w}(u_{t\nu},v_{t\nu})\circ \check{f}^{}_{lm}(u_{t\nu},v_{t\nu})\Bigg]\circ \delta(u_{t\nu},v_{t\nu})\label{eq:5}
-		    %=&\Bigg[sinc\frac{-2\pi t\Delta \nu}{2}sinc\frac{-2\pi\nu\Delta t}{2}e^{-2\pi i (u_{t_c\nu_c}l+v_{t_c\nu_c}m+w_{t_c\nu_c}(n-1))}\Bigg]
-\end{alignat}
-It is then observed that for finite frequency and time range, the complex phase varies linearly within the range
-$\Delta \Phi = −2\pi t\Delta \nu$ and $\Delta \Psi= −2\pi\nu\Delta t$ in frequency and time respectively.
-
-
-O.M. Smirnov (cite, Jan 2011) demonstrated that in the case of averaging, natural weighting where
-$f^{\Pi}_{lm}(u_{t\nu},v_{t\nu})=\Pi_{lm}(u_{t\nu},v_{t\nu})$, the bove Equation is approximated in term of the
-phase changing in time $\Delta \Psi$ and frequency  $\Delta \Phi$ for the case
-of smearing as:
+% This expansion will be used to approximate the averaged or weighted averaged visibility
+% $V_{}(\mathbf{b}_0)$.
+If it is assumed that $\Pi(\mathbf{b})$ is the top-hat windowing function, then it can be demonstrated 
+that its Fourier transform is (see Appendix A)
 \begin{alignat*}{2}
-V_{\nu}(\mathbf{b})^{\Pi}_{t_c \nu_c} &\simeq sinc\frac{\Delta \Psi}{2}sinc\frac{\Delta \Phi}{2}&\check{\delta}_{lm}(u_{t\nu}+u_{t_c\nu_c}, v_{t\nu}+v_{t_c\nu_c})
+\mathcal{F}\Big\{\Pi(\mathbf{b})\Big\}&=sinc\frac{-2\pi t\Delta \nu}{2}sinc\frac{-2\pi\nu\Delta t}{2}
+\end{alignat*}
+It is demonstrated in \citep{smirnov2011revisiting} that for  natural weighting, Eq.\ref{eq:5}  is approximated in term of the
+phase changing in time $\Delta \Psi$ and frequency  $\Delta \Phi$ for the case of smearing as:
+\begin{alignat*}{2}
+V_{}(\mathbf{b}_0) &\simeq C_{lm}(\mathbf{b}_0)\Bigg[sinc\frac{\Delta \Psi}{2}sinc\frac{\Delta \Phi}{2}*\mathcal{F}\Big\{w(\mathbf{b}_0)\Bigg]\mathcal{F}\Big\{\delta(\mathbf{b}_0)\Big\}
 %e^{-2\pi i (u_{t_c\nu_c}l+v_{t_c\nu_c}m+w_{t_c\nu_c}(n-1))}
 \end{alignat*}
-\begin{alignat}{2}
-				      &\circ \delta(u_{t_c\nu_c},v_{t_c\nu_c})\label{eq:6},
-\end{alignat}
-with,
+where $\Delta \Psi$ and $\Delta \Phi$ are explicitly defined as
 \begin{alignat*}{2}
-\Delta \Psi =&2\pi \Big[(u_{t_s\nu_c}-u_{t_e\nu_c})l + (v_{t_s\nu_c}-v_{t_e\nu_c})m\\
-	    & +(w_{t_s\nu_c}-w_{t_e\nu_c})(n-1)\Big]\\
-\Delta \Phi =&2\pi \Big[(u_{t_c\nu_s}-u_{t_c\nu_e})l + (v_{t_c\nu_s}-v_{t_c\nu_e})m\\
-	    & +(w_{t_c\nu_s}-w_{t_c\nu_e})(n-1)\Big]
+\Delta \Psi =&2\pi \Big[(u_{t_s\nu_0}-u_{t_e\nu_0})l + (v_{t_s\nu_0}-v_{t_e\nu_0})m\\
+	    & +(w_{t_s\nu_0}-w_{t_e\nu_0})(n-1)\Big]\\
+\Delta \Phi =&2\pi \Big[(u_{t_0\nu_s}-u_{t_0\nu_e})l + (v_{t_0\nu_s}-v_{t_0\nu_e})m\\
+	    & +(w_{t_0\nu_s}-w_{t_0\nu_e})(n-1)\Big]
 \end{alignat*}
 
-We then generalized the approximation of smearing for a
-random taper $f_{lm}(u_{t\nu},v_{t\nu})$ as follows:
+We then generalized the approximation of smearing where $\Pi(\mathbf{b})$ is a radom windowing function 
+as follows:
 \begin{alignat*}{2}
-V_{\nu}(\mathbf{b})^{window}_{t_c \nu_c} &\simeq \Bigg[sinc\frac{\Delta \Psi}{2}sinc\frac{\Delta \Phi}{2}\check{\delta}_{lm}(u_{t\nu}+u_{t_c\nu_c}, v_{t\nu}+v_{t_c\nu_c})\Bigg]
+V_{}(\mathbf{b}_0) &\simeq C_{lm}(\mathbf{b}_0)\Bigg[\mathcal{F}\Big\{\Pi(\mathbf{b}_0)\Big\}*\mathcal{F}\Big\{w(\mathbf{b}_0)\Big\}\Bigg]\mathcal{F}\Big\{\delta(\mathbf{b}_0)\Big\}
 \end{alignat*}
-\begin{alignat}{2}
-					  & \circ \check{w}(u_{t_c\nu_c},v_{t_c\nu_c})\circ \check{f}_{lm}(u_{t_c\nu_c},v_{t_c\nu_c})\circ \delta(u_{t_c\nu_c},v_{t_c\nu_c})\label{eq:5}.
-\end{alignat}
+\subsection{Imaging} 
 Assuming that all the baselines are pointing at the same phase tracking centre, during conventional interferometric imaging,
 the baseline visibilities are mapped on a uv-plane, and the result is inverse Fourier transformed:
 \begin{alignat}{2}
-PSF(\mathbf{s}) \simeq & \mathcal{F}^{-1}\Bigg\{\sum_{i=1,j=1}^{n_v\times n_{bl}}V_{\nu}(\mathbf{b})^{window}_{t_i \nu_j}\Bigg\}\\
-		\simeq & C(\mathbf{s})PSF(\mathbf{s_0}),
+PSF(\mathbf{s}) \simeq & \mathcal{F}^{-1}\Bigg\{\sum_{j=1}^{n_{bl}n_v}V_{pq}(\mathbf{b}_j)\Bigg\}\\
+		\simeq & \mathcal{F}^{-1}\Bigg\{\sum_{j=1}^{n_{bl}n_v} C_{lm}(\mathbf{b}_0)\Bigg[\mathcal{F}\Big\{\Pi(\mathbf{b}_0)\Big\}\\
+		&*\mathcal{F}\Big\{w(\mathbf{b}_0)\Big\}\Bigg]\mathcal{F}\Big\{\delta(\mathbf{b}_0)\Big\} \Bigg\}\\
+		%\simeq & \sum_{pq,j=1}^{n_v}  \Bigg[\Pi(\mathbf{b}-\mathbf{b}_0)w(\mathbf{b}-\mathbf{b}_0)\Bigg] *\delta(\mathbf{b}_0)\\
+		\simeq & \mathcal{C}(\mathbf{s})*PSF(\mathbf{s_0}),
 \end{alignat}
 where $PSF(\mathbf{s}_0)$ is the PSF at the phase tracking center
-and $C(\mathbf{s})$ is the image plane smearing response for a source
-located toward the direction $\mathbf{s}\neq \mathbf{s_0}$, defined as:
+and $\mathcal{C}(\mathbf{s})$ is the image plane smearing response for a source
+located toward the direction $\mathbf{s}\neq \mathbf{s_0}$. Note that, $n_v\times n_{bl}$ is the array 
+total number of visibilities with $n_v$ and $n_{bl}$ the number of visibilities per 
+baseline after approximation and the number of baselines respectively.
+
+
+
+
+
+$\mathcal{C}(\mathbf{s})$ is defined as
 \begin{alignat}{2}
-C(\mathbf{s}) &= \sum_{i=1,j=1}^{n_v\times n_{bl}}w(u_{t_i\nu_j},v_{t_i\nu_j})f_{lm}(u_{t_i\nu_j},v_{t_i\nu_j})\mathcal{F}^{-1}\Bigg\{sinc\frac{\Delta \Psi}{2}sinc\frac{\Delta \Phi}{2}\check{\delta}_{lm}(u_{t\nu}+u_{t_i\nu_j}, v_{t\nu}+v_{t_i\nu_j})\Bigg\}.
+\mathcal{C}(\mathbf{s}) &= \sum_{j=1}^{n_{bl}n_v}\mathcal{F}^{-1}\Big\{C_{lm}(\mathbf{b}_0)\Big\}*\Bigg[\Pi(\mathbf{b}_0)w(\mathbf{b}_0)\Bigg]
 \end{alignat}
-Here, $n_v\times n_{bl}$ is the array total number of visibilities with $n_v$ and $n_{bl}$ the number of visibilities per 
-baseline after averaging and the number of baselines respectively.
+
 
 
 The smeared unnormalized PSF of a source, $PSF(\mathbf{s})$ located toward the
 direction $\mathbf{s}$ was derived and shown that it is proportional
 to the PSF, $PSF(\mathbf{s}_0)$ of a source at the phase centre.
-\begin{figure*}
-\includegraphics[width=1\textwidth]{./Figures/averaging_brute_quick_good.png}\caption{Brute Vs approximate PSF for a source at 1.4deg}\label{fig:uvcov}
- \end{figure*}
- \begin{figure*}
-\includegraphics[width=1\textwidth]{./Figures/averaging_brute_quick_logscale.png}\caption{Brute Vs approximate PSF for a source at 1.4deg compare in log space}\label{fig:corrSigVLAMxBl_overlapGdelta}
-\end{figure*}
- \begin{figure*}
-\includegraphics[width=1\textwidth]{./Figures/phasecentre.png}
-\end{figure*}	
-% \subsubsection{Computational cost}
-% 
-% \section{Simulation and comparison}
-% \section{Discussion and conclusion}
+% \begin{figure*}
+% \includegraphics[width=1\textwidth]{./Figures/averaging_brute_quick_good.png}\caption{Brute Vs approximate PSF for a source at 1.4deg}\label{fig:uvcov}
+%  \end{figure*}
+%  \begin{figure*}
+% \includegraphics[width=1\textwidth]{./Figures/averaging_brute_quick_logscale.png}\caption{Brute Vs approximate PSF for a source at 1.4deg compare in log space}\label{fig:corrSigVLAMxBl_overlapGdelta}
+% \end{figure*}
+%  \begin{figure*}
+% \includegraphics[width=1\textwidth]{./Figures/phasecentre.png}
+% \end{figure*}
+
+ \subsubsection{Computational cost} 
+ \section{Simulation and comparison}
+ \section{Discussion and conclusion}
+

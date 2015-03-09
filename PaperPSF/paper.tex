@@ -23,7 +23,6 @@
 
 \usepackage{arydshln}
 \usepackage{amsmath}
-
 \bibpunct{(}{)}{;}{a}{}{,}
 
 \newcommand{\tbsp}{\rule{0pt}{18pt}}
@@ -63,20 +62,19 @@
 \subtitle{}
 \author{}%\inst{1}}
 
-%% \institute{
-%% The caca institude
-%% %% Department of Physics \& Electronics, Rhodes University, PO Box 94,
-%% %% Grahamstown, 6140, South Africa
-%% %% \and
-%% %% SKA South Africa, 3rd Floor, The Park, Park Road, Pinelands, 7405, South Africa
-%% %% \and
-%% %% GEPI, Observatoire de Paris, CNRS, Universit\'e Paris Diderot,
-%% %% 5 place Jules Janssen, 92190 Meudon, France
-%% }
+\institute{
+Department of Physics \& Electronics, Rhodes University, PO Box 94,
+Grahamstown, 6140, South Africa
+\and
+SKA South Africa, 3rd Floor, The Park, Park Road, Pinelands, 7405, South Africa
+\and
+GEPI, Observatoire de Paris, CNRS, Universit\'e Paris Diderot,
+5 place Jules Janssen, 92190 Meudon, France
+}
 %   \author{}
 %   \offprints{}
 %   \institute{}
-\date{Received <date> / Accepted <date>}
+\date{Received  / Accepted }
 
 
 \abstract{
@@ -93,17 +91,20 @@
 
 \input{MatrixFormulation.tex}
 
-%% \begin{acknowledgements}
-%% No thanks
-%% \end{acknowledgements}
+ \begin{acknowledgements}
+ No thanks
+ \end{acknowledgements}
 
-
-\bibliographystyle{aa}
-\bibliography{references}
-
+%\bibliographystyle{aa}
+%\bibliography{references}
+\bibliographystyle{mn2e}
+\bibliography{paper}
 %\pagebreak
-%\newpage
-
+\newpage
+\appendix % Cue to tell LaTeX that the following 'chapters' are Appendices
+\input{AppendixA}
+%\input{Appendices/AppendixB}
+%\input{Appendices/AppendixC}
 
 %% \begin{appendix}
 %% \input{Initialisation.tex}

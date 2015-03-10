@@ -278,18 +278,19 @@ that its Fourier transform is (see Appendix A)
 It is demonstrated in \citep{smirnov2011revisiting} that for  natural weighting, Eq.\ref{eq:5}  is approximated in term of the
 phase changing in time $\Delta \Psi$ and frequency  $\Delta \Phi$ for the case of smearing as:
 \begin{alignat*}{2}
-V_{}(\mathbf{b}_0) &\simeq C_{lm}(\mathbf{b}_0)\Bigg[sinc\frac{\Delta \Psi}{2}sinc\frac{\Delta \Phi}{2}*\mathcal{F}\Big\{w(\mathbf{b}_0)\Bigg]\mathcal{F}\Big\{\delta(\mathbf{b}_0)\Big\}
+V_{}(\mathbf{b}_0) &\simeq C_{lm}(\mathbf{b}_0)\Bigg[sinc\frac{\Delta \Psi}{2}sinc\frac{\Delta \Phi}{2}*\mathcal{F}\Big\{w(\mathbf{b}_0)\Big\}\Bigg]\mathcal{F}\Big\{\delta(\mathbf{b}_0)\Big\}
 %e^{-2\pi i (u_{t_c\nu_c}l+v_{t_c\nu_c}m+w_{t_c\nu_c}(n-1))}
 \end{alignat*}
 where $\Delta \Psi$ and $\Delta \Phi$ are explicitly defined as
 \begin{alignat*}{2}
 \Delta \Psi =&2\pi \Big[(u_{t_s\nu_0}-u_{t_e\nu_0})l + (v_{t_s\nu_0}-v_{t_e\nu_0})m\\
-	    & +(w_{t_s\nu_0}-w_{t_e\nu_0})(n-1)\Big]\\
+	    & +(w_{t_s\nu_0}-w_{t_e\nu_0})(n-1)\Big],\\
 \Delta \Phi =&2\pi \Big[(u_{t_0\nu_s}-u_{t_0\nu_e})l + (v_{t_0\nu_s}-v_{t_0\nu_e})m\\
-	    & +(w_{t_0\nu_s}-w_{t_0\nu_e})(n-1)\Big]
+	    & +(w_{t_0\nu_s}-w_{t_0\nu_e})(n-1)\Big],
 \end{alignat*}
+and $t_s$, $t_e$, $\nu_s$ and $\nu_e$ are the sampling intervals starting time, ending time, starting frequency and ending frequency respectively.\\
 
-We then generalized the approximation of smearing where $\Pi(\mathbf{b})$ is a radom windowing function 
+We then generalized the approximation of smearing where $\Pi(\mathbf{b})$ is a random windowing function 
 as follows:
 \begin{alignat*}{2}
 V_{}(\mathbf{b}_0) &\simeq C_{lm}(\mathbf{b}_0)\Bigg[\mathcal{F}\Big\{\Pi(\mathbf{b}_0)\Big\}*\mathcal{F}\Big\{w(\mathbf{b}_0)\Big\}\Bigg]\mathcal{F}\Big\{\delta(\mathbf{b}_0)\Big\}
@@ -299,41 +300,33 @@ Assuming that all the baselines are pointing at the same phase tracking centre, 
 the baseline visibilities are mapped on a uv-plane, and the result is inverse Fourier transformed:
 \begin{alignat}{2}
 PSF(\mathbf{s}) \simeq & \mathcal{F}^{-1}\Bigg\{\sum_{j=1}^{n_{bl}n_v}V_{pq}(\mathbf{b}_j)\Bigg\}\\
-		\simeq & \mathcal{F}^{-1}\Bigg\{\sum_{j=1}^{n_{bl}n_v} C_{lm}(\mathbf{b}_0)\Bigg[\mathcal{F}\Big\{\Pi(\mathbf{b}_0)\Big\}\\
-		&*\mathcal{F}\Big\{w(\mathbf{b}_0)\Big\}\Bigg]\mathcal{F}\Big\{\delta(\mathbf{b}_0)\Big\} \Bigg\}\\
+		\simeq & \mathcal{F}^{-1}\Bigg\{\sum_{j=1}^{n_{bl}n_v} C_{lm}(\mathbf{b}_j)\Bigg[\mathcal{F}\Big\{\Pi(\mathbf{b}_j)\Big\}\\
+		&*\mathcal{F}\Big\{w(\mathbf{b}_j)\Big\}\Bigg]\mathcal{F}\Big\{\delta(\mathbf{b}_j)\Big\} \Bigg\}\\
 		%\simeq & \sum_{pq,j=1}^{n_v}  \Bigg[\Pi(\mathbf{b}-\mathbf{b}_0)w(\mathbf{b}-\mathbf{b}_0)\Bigg] *\delta(\mathbf{b}_0)\\
 		\simeq & \mathcal{C}(\mathbf{s})*PSF(\mathbf{s_0}),
 \end{alignat}
 where $PSF(\mathbf{s}_0)$ is the PSF at the phase tracking center
 and $\mathcal{C}(\mathbf{s})$ is the image plane smearing response for a source
-located toward the direction $\mathbf{s}\neq \mathbf{s_0}$. Note that, $n_v\times n_{bl}$ is the array 
-total number of visibilities with $n_v$ and $n_{bl}$ the number of visibilities per 
-baseline after approximation and the number of baselines respectively.
-
-
-
-
-
-$\mathcal{C}(\mathbf{s})$ is defined as
+located toward the direction $\mathbf{s}$ ($\mathbf{s}\neq \mathbf{s_0}$) given as
 \begin{alignat}{2}
-\mathcal{C}(\mathbf{s}) &= \sum_{j=1}^{n_{bl}n_v}\mathcal{F}^{-1}\Big\{C_{lm}(\mathbf{b}_0)\Big\}*\Bigg[\Pi(\mathbf{b}_0)w(\mathbf{b}_0)\Bigg]
+\mathcal{C}(\mathbf{s}) &= \sum_{j=1}^{n_{bl}n_v}\mathcal{F}^{-1}\Big\{C_{lm}(\mathbf{b}_0)\Big\}*\Bigg[\Pi(\mathbf{b}_0)w(\mathbf{b}_0)\Bigg].
 \end{alignat}
-
-
+Note that, $n_v\times n_{bl}$ is the array 
+total number of visibilities with $n_v$ and $n_{bl}$ the number of visibilities per 
+baseline after approximation and the number of baselines respectively.\\
 
 The smeared unnormalized PSF of a source, $PSF(\mathbf{s})$ located toward the
 direction $\mathbf{s}$ was derived and shown that it is proportional
 to the PSF, $PSF(\mathbf{s}_0)$ of a source at the phase centre.
-% \begin{figure*}
-% \includegraphics[width=1\textwidth]{./Figures/averaging_brute_quick_good.png}\caption{Brute Vs approximate PSF for a source at 1.4deg}\label{fig:uvcov}
-%  \end{figure*}
-%  \begin{figure*}
-% \includegraphics[width=1\textwidth]{./Figures/averaging_brute_quick_logscale.png}\caption{Brute Vs approximate PSF for a source at 1.4deg compare in log space}\label{fig:corrSigVLAMxBl_overlapGdelta}
-% \end{figure*}
-%  \begin{figure*}
-% \includegraphics[width=1\textwidth]{./Figures/phasecentre.png}
-% \end{figure*}
-
+\begin{figure*}
+\includegraphics[width=1\textwidth]{./Figures/averaging_brute_quick_good.png}\caption{Brute Vs approximate PSF for a source at 1.4deg}\label{fig:uvcov}
+ \end{figure*}
+ \begin{figure*}
+\includegraphics[width=1\textwidth]{./Figures/averaging_brute_quick_logscale.png}\caption{Brute Vs approximate PSF for a source at 1.4deg compare in log space}\label{fig:corrSigVLAMxBl_overlapGdelta}
+\end{figure*}
+ \begin{figure*}
+\includegraphics[width=1\textwidth]{./Figures/phasecentre.png}
+\end{figure*}
  \subsubsection{Computational cost} 
  \section{Simulation and comparison}
  \section{Discussion and conclusion}

@@ -19,6 +19,12 @@
 %\usepackage[subnum]{cases}
 \usepackage{enumerate}
 \usepackage{draftcopy}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{pifont}
+
+\usepackage{caption}
+\usepackage{subcaption}
 %\psdraft
 %\usepackage{hyperref}
 \usepackage{arydshln}
@@ -52,16 +58,16 @@
 
 
  \def\supertiny{ \font\supertinyfont = cmr10 at 4pt \relax \supertinyfont}
-
-
-
+ 
+ 
 \begin{document}      
+
 	      
-\title{Tapering, DDE, and PSFs}
+\title{Fast Scheme to Approximate an Offset Point Spread Function Response}
 
 \subtitle{}
-\author{}%\inst{1}}
-
+\author{M. Atemkeng$^{1}$\thanks{E-mail: m.atemkeng@gmail.com}, O. Smirnov$^{12}$, 
+ C. Tasse$^{13}$, G. Foster$^{12}$, J. Jonas$^{12}$}
 \institute{
 Department of Physics \& Electronics, Rhodes University, PO Box 94,
 Grahamstown, 6140, South Africa
@@ -92,7 +98,8 @@ GEPI, Observatoire de Paris, CNRS, Universit\'e Paris Diderot,
 \input{MatrixFormulation.tex}
 
  \begin{acknowledgements}
- No thanks
+ The research  made use of  MeqTrees software system designed to implement numerical models for third-generation calibration (3GC) 
+ Python Extensions for Interferometry and Python. The research has been supported by the South Africa National Research Foundation.
  \end{acknowledgements}
 
 %\bibliographystyle{aa}

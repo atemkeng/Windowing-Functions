@@ -3,18 +3,19 @@
 \section{The Fourier Transform of a top-hat windowing function} %Main appendix title
 \label{AppendixA} % For referencing this appendix elsewhere, use \ref{AppendixA}
 %\lhead{Appendix A. \emph{The sampled function}} % This is for the header on each page - perhaps a shortened title
+A two dimensional top-hat window is defined as
 \begin{alignat}{2}
-\Pi_{lm}(u_{t\nu},v_{t\nu}) = \left\{
+\mathbf{\Pi}(\mathbf{b}) = \left\{
 \begin{array}{rl}
 1 & \mbox{for $\mathit{ t \times \nu \in  [t_s, t_e]\times [\nu_s, \nu_e]}$}, \\
 0 & \mbox{for $\mathit{ t \times \nu  \notin [t_s, t_e]\times [\nu_s, \nu_e]}$ }
-\end{array}\right.\label{eq:box}
+\end{array}\right.
 \end{alignat}
-where $t_s$, $t_e$, $\nu_s$ and $\nu_e$ are the starting times, ending time, starting frequency and ending frequency
- respectively. The Fourier transform, $\check{\Pi}_{lm}(u_{t\nu},v_{t\nu})$ of Eq.\ref{eq:box} is given by
+where $[t_s, t_e]\times [\nu_s, \nu_e]$ is the passband region.
+ 
 \begin{alignat*}{2}
-\check{\Pi}_{lm}(u_{t\nu},v_{t\nu})&=sinc\frac{-2\pi t\Delta \nu}{2}sinc\frac{-2\pi\nu\Delta t}{2}
+\widetilde{\Pi}(\mathbf{b})&= \frac{1}{\Delta t \Delta \nu}\int_{t_s}^{t_e}\int_{\nu_s}^{\nu_e} e^{-2\pi i t\nu}dtd\nu
 \end{alignat*}
-Let supose that 
+Let suppose that 
 
 

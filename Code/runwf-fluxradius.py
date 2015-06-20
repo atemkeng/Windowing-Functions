@@ -1,8 +1,9 @@
+import subprocess
 import ConfigParser
 import sys;
 import os;
 from ConfigParser import SafeConfigParser
-
+import structure_data
 def ConfigSectionMap(Config,section):
     dict1 = {}
     options = Config.options(section)
@@ -15,9 +16,11 @@ def ConfigSectionMap(Config,section):
             print("exception on %s!" % option)
             dict1[option] = None
     return dict1
-
+destdirsave = ''
+namefilesave = ''
 def read_hires (section,configfile):
-#	try:
+                
+    #	try:    
 		return  section['antennatablename'],section['hires_telescop_name'],section['ouput_directory'],\
 			int(section['num_time_steps']),float(section['step_time']),section['phase_centre_dec'],section['phase_centre_ra'],\
 			float(section['start_frequency_hz']),int(section['num_frequencies']),float(section['frequency_inc_hz']),\
@@ -63,7 +66,10 @@ def get_parameter_telescope(hiresms,loresms,parawind,window,cflname):
 	g_m0,outputcol,intputcol,dish_s,b_f,crsampl,t0,f0,ntime,nfreq,dt,df,weightshm,ovf,ovt,fov = read_ptsrcsky(ptsrcsky,cflname) 
 	g_m0 = g_m0.split(',')
 	sect,noise,ramdom = compres_rate_noise(rate_noise,cflname);
-	
+	global namefilesave 
+        namefilesave = nameoutputfile 
+        global destdirsave 
+        destdirsave = destdir1
 	sect1,use1,opt1 = read_windows (Config,parawind,cflname)
 	command1 = "";
         if crsampl.upper()=="FALSE":
@@ -75,44 +81,45 @@ def get_parameter_telescope(hiresms,loresms,parawind,window,cflname):
                                   and frequency_inc_hz or  numberfreqbintocompress""";
                         sys.exit()
                     else:
+                        
                         command = "pyxis src_supresion_fradius[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,stm=%.1f,stepm=%.1f,edm=%.1f,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,dtime=%i,dfreq=%i,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,intput_column=%s,output_column=%s,noise=%f,ramdomseed=%s,nameoutputfile=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
 		chanwidth1,starttime1,conf2,name2,startfreq2,starttime2,\
 		float(g_m0[0]),float(g_m0[1]),float(g_m0[2]),crsampl,t0,f0,ntime,nfreq,dt,df,window,fov,opt1,weightshm,ovt,ovf,intputcol,outputcol,noise,ramdom,nameoutputfile)
 			#print "**************************************here****************
-			#if rate_noise['use'].upper()=="TRUE":
-			#	command1 = "pyxis compression_noise[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,dtime=%i,dfreq=%i,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,noise=%f,ramdomseed=%s,intput_column=%s,output_column=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
-                #chanwidth1,starttime1,conf2,name2,startfreq2,starttime2,crsampl,t0,f0,ntime,nfreq,dt,df,window,fov,opt1,weightshm,ovt,ovf,noise,ramdom,intputcol,outputcol)
+		# 	if rate_noise['use'].upper()=="TRUE":
+		# 		command1 = "pyxis compression_noise[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,dtime=%i,dfreq=%i,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,noise=%f,ramdomseed=%s,intput_column=%s,output_column=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
+                # chanwidth1,starttime1,conf2,name2,startfreq2,starttime2,crsampl,t0,f0,ntime,nfreq,dt,df,window,fov,opt1,weightshm,ovt,ovf,noise,ramdom,intputcol,outputcol)
                 else:
                     if df <= 0:
                         print """ Please give frequency_inc_hz or  numberfreqbintocompress"""
                         sys.exit()
                     else:
-                        command = "pyxis src_supresion_fradius[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,stm=%.1f,stepm=%.1f,edm=%.1f,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,integrationl=%f,dfreq=%i,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,intput_column=%s,output_column=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
+                        command = "pyxis src_supresion_fradius[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,stm=%.1f,stepm=%.1f,edm=%.1f,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,integrationl=%f,dfreq=%i,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,intput_column=%s,output_column=%s,noise=%f,ramdomseed=%s,nameoutputfile=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
 		chanwidth1,starttime1,conf2,name2,startfreq2,starttime2,\
 		float(g_m0[0]),float(g_m0[1]),float(g_m0[2]),crsampl,t0,f0,ntime,\
-		nfreq,integrationl,df,window,fov,opt1,weightshm,ovt,ovf,intputcol,outputcol)
-			if  rate_noise['use'].upper()=="TRUE":
-				command1 = "pyxis compression_noise[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,integrationl=%f,dfreq=%i,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,noise=%f,ramdomseed=%s,intput_column=%s,output_column=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
-                chanwidth1,starttime1,conf2,name2,startfreq2,starttime2,crsampl,t0,f0,ntime,\
-                nfreq,integrationl,df,window,fov,opt1,weightshm,ovt,ovf,noise,ramdom,intputcol,outputcol)
+		nfreq,integrationl,df,window,fov,opt1,weightshm,ovt,ovf,intputcol,outputcol,noise,ramdom,nameoutputfile)
+		# 	if  rate_noise['use'].upper()=="TRUE":
+		# 		command1 = "pyxis compression_noise[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,integrationl=%f,dfreq=%i,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,noise=%f,ramdomseed=%s,intput_column=%s,output_column=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
+                # chanwidth1,starttime1,conf2,name2,startfreq2,starttime2,crsampl,t0,f0,ntime,\
+                # nfreq,integrationl,df,window,fov,opt1,weightshm,ovt,ovf,noise,ramdom,intputcol,outputcol)
             else:
                 if integrationl <= 0:
                     if dt <= 0:
                         print """ Please give the step_time or the  numbertimebintocompress """
                         sys.exit()
                     else:
-                        command = "pyxis src_supresion_fradius[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,stm=%.1f,stepm=%.1f,edm=%.1f,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,dtime=%i,chanwidthl=%f,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,intput_column=%s,output_column=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
+                        command = "pyxis src_supresion_fradius[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,stm=%.1f,stepm=%.1f,edm=%.1f,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,dtime=%i,chanwidthl=%f,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,intput_column=%s,output_column=%s,noise=%f,ramdomseed=%s,nameoutputfile=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
 		chanwidth1,starttime1,conf2,name2,startfreq2,starttime2,\
-		float(g_m0[0]),float(g_m0[1]),float(g_m0[2]),crsampl,t0,f0,ntime,nfreq,dt,step_freq,window,fov,opt1,weightshm,ovt,ovf,intputcol,outputcol)
-			if rate_noise['use'].upper()=="TRUE":
-				command1 = "pyxis compression_noise[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,dtime=%i,chanwidthl=%f,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,noise=%f,ramdomseed=%s,intput_column=%s,output_column=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
-                chanwidth1,starttime1,conf2,name2,startfreq2,starttime2,crsampl,t0,f0,ntime,nfreq,dt,step_freq,window,fov,opt1,weightshm,ovt,ovf,noise,ramdom,intputcol,outputcol)
+		float(g_m0[0]),float(g_m0[1]),float(g_m0[2]),crsampl,t0,f0,ntime,nfreq,dt,step_freq,window,fov,opt1,weightshm,ovt,ovf,intputcol,outputcol,noise,ramdom,nameoutputfile)
+		# 	if rate_noise['use'].upper()=="TRUE":
+		# 		command1 = "pyxis compression_noise[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,dtime=%i,chanwidthl=%f,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,noise=%f,ramdomseed=%s,intput_column=%s,output_column=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
+                # chanwidth1,starttime1,conf2,name2,startfreq2,starttime2,crsampl,t0,f0,ntime,nfreq,dt,step_freq,window,fov,opt1,weightshm,ovt,ovf,noise,ramdom,intputcol,outputcol)
                 else:
-                    command = "pyxis src_supresion_fradius[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,stm=%.1f,stepm=%.1f,edm=%.1f,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,integrationl=%f,chanwidthl=%f,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,intput_column=%s,output_column=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
-		chanwidth1,starttime1,conf2,name2,startfreq2,starttime2,float(g_m0[0]),float(g_m0[1]),float(g_m0[2]),crsampl,t0,f0,ntime,nfreq,integrationl,step_freq,window,fov,opt1,weightshm,ovt,ovf,intputcol,outputcol)
-		    if rate_noise['use'].upper()=="TRUE": 
-			    command1 = "pyxis compression_noise[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,integrationl=%f,chanwidthl=%f,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,noise=%f,ramdomseed=%s,intput_column=%s,output_column=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
-                chanwidth1,starttime1,conf2,name2,startfreq2,starttime2,crsampl,t0,f0,ntime,nfreq,integrationl,step_freq,window,fov,opt1,weightshm,ovt,ovf,noise,ramdom,intputcol,outputcol)
+                    command = "pyxis src_supresion_fradius[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,stm=%.1f,stepm=%.1f,edm=%.1f,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,integrationl=%f,chanwidthl=%f,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,intput_column=%s,output_column=%s,noise=%f,ramdomseed=%s,nameoutputfile=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
+		chanwidth1,starttime1,conf2,name2,startfreq2,starttime2,float(g_m0[0]),float(g_m0[1]),float(g_m0[2]),crsampl,t0,f0,ntime,nfreq,integrationl,step_freq,window,fov,opt1,weightshm,ovt,ovf,intputcol,outputcol,noise,ramdom,nameoutputfile)
+		   #  if rate_noise['use'].upper()=="TRUE": 
+		# 	    command1 = "pyxis compression_noise[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,integrationl=%f,chanwidthl=%f,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,noise=%f,ramdomseed=%s,intput_column=%s,output_column=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
+                # chanwidth1,starttime1,conf2,name2,startfreq2,starttime2,crsampl,t0,f0,ntime,nfreq,integrationl,step_freq,window,fov,opt1,weightshm,ovt,ovf,noise,ramdom,intputcol,outputcol)
 
         else:
 	    print "here------------------------------------"
@@ -121,69 +128,85 @@ def get_parameter_telescope(hiresms,loresms,parawind,window,cflname):
                      print """ Using Telescope simpling rate; Please give frequency_inc_hz or  numberfreqbintocompress """
                      sys.exit()
                 else:
-                	command = "pyxis src_supresion_fradius[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,stm=%.1f,stepm=%.1f,edm=%.1f,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,dfreq=%i,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,intput_column=%s,output_column=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
+                	command = "pyxis src_supresion_fradius[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,stm=%.1f,stepm=%.1f,edm=%.1f,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,dfreq=%i,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,intput_column=%s,output_column=%s,noise=%f,ramdomseed=%s,nameoutputfile=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
 		chanwidth1,starttime1,conf2,name2,startfreq2,starttime2,\
-		float(g_m0[0]),float(g_m0[1]),float(g_m0[2]),crsampl,t0,f0,ntime,nfreq,df,window,fov,opt1,weightshm,ovt,ovf,intputcol,outputcol)
-			if rate_noise['use'].upper()=="TRUE":
-                            command1 = "pyxis compression_noise[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,dfreq=%i,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,noise=%f,ramdomseed=%s,intput_column=%s,output_column=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
-		chanwidth1,starttime1,conf2,name2,startfreq2,starttime2,crsampl,t0,f0,ntime,nfreq,df,window,fov,opt1,weightshm,ovt,ovf,noise,ramdom,intputcol,outputcol)
+		float(g_m0[0]),float(g_m0[1]),float(g_m0[2]),crsampl,t0,f0,ntime,nfreq,df,window,fov,opt1,weightshm,ovt,ovf,intputcol,outputcol,noise,ramdom,nameoutputfile)
+			# if rate_noise['use'].upper()=="TRUE":
+                #             command1 = "pyxis compression_noise[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,dfreq=%i,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,noise=%f,ramdomseed=%s,intput_column=%s,output_column=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
+		# chanwidth1,starttime1,conf2,name2,startfreq2,starttime2,crsampl,t0,f0,ntime,nfreq,df,window,fov,opt1,weightshm,ovt,ovf,noise,ramdom,intputcol,outputcol)
 
             else:
-                command = "pyxis src_supresion_fradius[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,stm=%.1f,stepm=%.1f,edm=%.1f,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,chanwidthl=%f,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,intput_column=%s,output_column=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
+                command = "pyxis src_supresion_fradius[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,stm=%.1f,stepm=%.1f,edm=%.1f,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,chanwidthl=%f,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,intput_column=%s,output_column=%s,noise=%f,ramdomseed=%s,nameoutputfile=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
 		chanwidth1,starttime1,conf2,name2,startfreq2,starttime2,\
-		float(g_m0[0]),float(g_m0[1]),float(g_m0[2]),crsampl,t0,f0,ntime,nfreq,step_freq,window,fov,opt1,weightshm,ovt,ovf,intputcol,outputcol)
+		float(g_m0[0]),float(g_m0[1]),float(g_m0[2]),crsampl,t0,f0,ntime,nfreq,step_freq,window,fov,opt1,weightshm,ovt,ovf,intputcol,outputcol,noise,ramdom,nameoutputfile)
 		print "here"
 		
-		if rate_noise['use'].upper()=="TRUE":
-			 command1 = "pyxis compression_noise[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,chanwidthl=%f,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,noise=%f,ramdomseed=%s,intput_column=%s,output_column=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
-                chanwidth1,starttime1,conf2,name2,startfreq2,starttime2,crsampl,t0,f0,ntime,nfreq,step_freq,window,fov,opt1,weightshm,ovt,ovf,noise,ramdom,intputcol,outputcol)
+		# if rate_noise['use'].upper()=="TRUE":
+		# 	 command1 = "pyxis compression_noise[confh=%s,nameh=%s,outputdir=%s,Ntimeh=%i,integrationh=%.1f,dech=%s,rah=%s,startfreqh=%.1f,nchanh=%i,chanwidthh=%.1f,starttimeh=%s,confl=%s,namel=%s,startfreql=%.1f,starttimel=%s,crs=%s,time0=%i,freq0=%i,ntime=%i,nfreq=%i,chanwidthl=%f,window=%s,fov=%f,optimalw=%s,weightsheme=%s,ovlaptime=%i,ovlapfreq=%i,noise=%f,ramdomseed=%s,intput_column=%s,output_column=%s]"%(conf1,name1,destdir1,hours1,integ1,dec1,ra1,startfreq1,nchan1,\
+                # chanwidth1,starttime1,conf2,name2,startfreq2,starttime2,crsampl,t0,f0,ntime,nfreq,step_freq,window,fov,opt1,weightshm,ovt,ovf,noise,ramdom,intputcol,outputcol)
 
         os.system(command)
 	if command1 !="":
 		os.system(command1)
         
 if __name__ == "__main__":
-    	arg = sys.argv
-	Config = ConfigParser.ConfigParser()
-	for i in range(1,len(arg)):
-		Config.read("%s"%arg[i])
-		sections = Config.sections()	
-		hiresms = ConfigSectionMap(Config, sections[0])
-		loresms = ConfigSectionMap(Config, sections[1])
-		ptsrcsky = ConfigSectionMap(Config, sections[2])
-		rate_noise = ConfigSectionMap(Config, sections[3])
-		wsinc = ConfigSectionMap(Config, sections[4])
-		wbessel = ConfigSectionMap(Config, sections[5])
-		wbutter = ConfigSectionMap(Config, sections[6])
-		sinchamming = ConfigSectionMap(Config, sections[7])
-		sincbackman = ConfigSectionMap(Config, sections[8])
-		sinchanning = ConfigSectionMap(Config, sections[9])
-		besselhamming = ConfigSectionMap(Config, sections[10])
-		besselblackman = ConfigSectionMap(Config, sections[11])
-		besselhanning = ConfigSectionMap(Config, sections[12])
-		boxcar = ConfigSectionMap(Config, sections[13])
+ arg = sys.argv
+ Config = ConfigParser.ConfigParser()
+ for shelcomand in range(1,len(arg)):
+    intputfile = subprocess.check_output(arg[shelcomand], shell=True).split("\n")
+    intputfile.pop()
+        
+    
+    for i in range(0,len(intputfile)):
+        	Config.read("%s"%intputfile[i])
+        	sections = Config.sections()	
+        	hiresms = ConfigSectionMap(Config, sections[0])
+        	loresms = ConfigSectionMap(Config, sections[1])
+        	ptsrcsky = ConfigSectionMap(Config, sections[2])
+        	rate_noise = ConfigSectionMap(Config, sections[3])
+        	wsinc = ConfigSectionMap(Config, sections[4])
+                sincsinc = ConfigSectionMap(Config, sections[5])
+        	wbessel = ConfigSectionMap(Config, sections[6])
+        	wbutter = ConfigSectionMap(Config, sections[7])
+        	sinchamming = ConfigSectionMap(Config, sections[8])
+        	sincbackman = ConfigSectionMap(Config, sections[9])
+        	sinchanning = ConfigSectionMap(Config, sections[10])
+        	besselhamming = ConfigSectionMap(Config, sections[11])
+        	besselblackman = ConfigSectionMap(Config, sections[12])
+        	besselhanning = ConfigSectionMap(Config, sections[13])
+        	boxcar = ConfigSectionMap(Config, sections[14])
 		
         	if  wsinc['use'] == "True":
-            		get_parameter_telescope(hiresms,loresms,wsinc,'sinc2',arg[i])
+            		get_parameter_telescope(hiresms,loresms,wsinc,'sinc2',intputfile[i])
         	if  wbessel['use'] == "True":
-            		get_parameter_telescope(hiresms,loresms,wbessel,'airy2',arg[i]);
-		if  sinchamming['use'] == "True":
-                        get_parameter_telescope(hiresms,loresms,sinchamming,'sinchamming2',arg[i]);
-		if  sincbackman['use'] == "True":
-                        get_parameter_telescope(hiresms,loresms,sincbackman,'sincblackman2',arg[i]);
-		if  sinchanning['use'] == "True":
-                        get_parameter_telescope(hiresms,loresms,sinchanning,'sinchanning2',arg[i]);
-		if  besselhamming['use'] == "True":
-                        get_parameter_telescope(hiresms,loresms,besselhamming,'besselhamming2',arg[i]);
-		if  besselblackman['use'] == "True":
-                        get_parameter_telescope(hiresms,loresms,besselblackman,'besselblackman2',arg[i]);
-		if  besselhanning['use'] == "True":
-                        get_parameter_telescope(hiresms,loresms,besselhanning,'besselhanning2',arg[i]);
-		if  boxcar['use'] == "True":
-                        get_parameter_telescope(hiresms,loresms,boxcar,'boxcar',arg[i]);
-
-
-		
+            		get_parameter_telescope(hiresms,loresms,wbessel,'airy2',intputfile[i]);
+        	if  sinchamming['use'] == "True":
+                        get_parameter_telescope(hiresms,loresms,sinchamming,'sinchamming2',intputfile[i]);
+                if  sincsinc['use'] == "True":
+                        get_parameter_telescope(hiresms,loresms,sincsinc,'sincsinc2',intputfile[i]);
+        	if  sincbackman['use'] == "True":
+                        get_parameter_telescope(hiresms,loresms,sincbackman,'sincblackman2',intputfile[i]);
+        	if  sinchanning['use'] == "True":
+                        get_parameter_telescope(hiresms,loresms,sinchanning,'sinchanning2',intputfile[i]);
+        	if  besselhamming['use'] == "True":
+                        get_parameter_telescope(hiresms,loresms,besselhamming,'besselhamming2',intputfile[i]);
+        	if  besselblackman['use'] == "True":
+                        get_parameter_telescope(hiresms,loresms,besselblackman,'besselblackman2',intputfile[i]);
+        	if  besselhanning['use'] == "True":
+                        get_parameter_telescope(hiresms,loresms,besselhanning,'besselhanning2',intputfile[i]);
+        	if  boxcar['use'] == "True":
+                        get_parameter_telescope(hiresms,loresms,boxcar,'boxcar',intputfile[i]);
+        
+ outputfile = subprocess.check_output("ls %s/*.data"%destdirsave, shell=True).split("\n")
+ outputfile.pop()
+    #os.system("rm %s/*.data"%destdirsave)
+ structure_data.list_data(listdataextension=outputfile, destir="%s"%destdirsave, datafile="%s"%namefilesave,shellcom=arg[1])
+    # if savenoise != None:
+			
+    #     	x.sh("python runtexcode.py $filename");
+    #     x.sh("mv compression-noise.pdf %s"%(outputdir))
+    #     x.sh("mv compression-noise.tex %s"%(outputdir))
+    #     #x.sh("rm compression-noise.*")
 
 
             

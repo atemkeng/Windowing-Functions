@@ -329,7 +329,7 @@ def sincsinc2 (x, y):
 	Two dimensional sinc window
 	""";
 	deg=(v.FOV*np.pi**2)/(180.)
-	r = np.sqrt(x**2+y**2)*deg
+	r = np.sqrt(x**2+y**2)
 	x1 = r*deg; wx = (np.sin(x1)/x1);
 	wx[x1==0] = 1; 
 	return wx
@@ -696,7 +696,7 @@ def src_supresion_fradius(ovlaptime=None,ovlapfreq=None,weightsheme=None,window=
 	"""
 	This function     
 	"""
-	
+	info("direction time=%s, freq=%s"%(timedirect,freqdirect))
 	ntime = ntime  or Ntimeh - time0; nfreq = nfreq or nchanh - freq0; weightsheme = weightsheme or "natural";
 	intput_column = intput_column or "DATA"; output_column = output_column or "CORRECTED_DATA";
 	ovlaptime = ovlaptime or 0; ovlapfreq = ovlapfreq or 0 ;  
@@ -809,6 +809,11 @@ def src_supresion_fradius(ovlaptime=None,ovlapfreq=None,weightsheme=None,window=
 	dict = {'window':type_window,'flux':Listflux,'noise':evaluate_noise,'radius':src_locat_m,'fov':v.FOV,'Bandwidth':chanwidthl*1e-6,'int':integrationl}
 	pickle.dump(dict, f)
 	f.close()
+	x.sh("rm -fr $outputdir/*.MS")
+	x.sh("rm -fr $outputdir/*.MS")
+        x.sh("rm -rf  plotsvlac-lores-*")
+	x.sh("rm makems.vlac-*")
+	x.sh("rm vlac-lores-*")
         #pylab.plot(src_locat_m, Listflux,"b-o", label="%s-%i-%i, n=%f"%(windowing.split()[1],ovlaptime,ovlapfreq,noise))
 	#pylab.savefig("%s/%s-%s-%iovlaptimex%iovlapfreq-fluxvsradius"%(outputdir,outputdir,windowing.split()[1],ovlaptime,ovlapfreq));
 
@@ -977,13 +982,19 @@ def compression_noise (noise=None,ramdomseed=None,ovlaptime=None,ovlapfreq=None,
 	memoryHires = np.array([ntime,nfreq,])
 	memoryLores = np.array([Ntimel,nchanl])
 	import pickle;
-	filename = "%s/%s-%.2fs-%.2fMHz-%iovlaptimex%iovlapfreq-compression-noise.data"%(outputdir,namel,integrationl,chanwidthl*1e-6,ovlaptime,ovlapfreq)
+	type_window = "%s-%ix%i"%(windowing.split()[1],int((dtime+2*ovlaptime)/dtime),int((dfreq+2*ovlapfreq)/dfreq))
+	filename = "%scompression-noise.data"%type_window
 	f = open(filename, "a"); 
-	dict = {'window-%iovlaptimex%iovlapfreq'%(ovlaptime,ovlapfreq):windowing.split()[1],'HiresMS':memoryHires,'LowresMS':memoryLores,'Noise':window_noise}
+	
+	dict = {'window':type_window,'HiresMS':memoryHires,'LowresMS':memoryLores,'Noise':window_noise}
 	pickle.dump(dict, f)
 	f.close()
-        x.sh("python runtexcode.py $filename");
-	x.sh("mv %s-%.2fs-%.2fMHz-%iovlaptimex%iovlapfreq-compression-noise.* $outputdir"%(namel,integrationl,chanwidthl*1e-6,ovlaptime,ovlapfreq))
+        
+	x.sh("rm -fr $outputdir/*.MS")
+	x.sh("rm -fr $outputdir/*.MS")
+        x.sh("rm -rf  plotsvlac-lores-*")
+	x.sh("rm makems.vlac-*")
+	x.sh("rm vlac-lores-*")
 	
 	
 define("HIRES_VLAC",[100,1.5,-45,1400,1,10,"2011/11/16/17:00"],"synthesis(h), integr(s),dec(d.m.s),freq(MHz),Nchannels(int),Chanwidth(MHz),starttime(date)");

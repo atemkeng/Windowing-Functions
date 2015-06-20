@@ -168,11 +168,11 @@ class MSResampler (object):
             import cPickle
             cPickle.dump((p,q,uvd1[0],uvd2[0],wf[0]),dump);
           if dumpfig and p==17 and q==26:
-            print uvd1[0],uvd2[0],wf[0];
+            #print uvd1[0],uvd2[0],wf[0];
             pylab.plot(wf[0,dtime/2,0,:])
             pylab.plot(wf[0,:,0,dfreq/2])
             pylab.savefig(dumpfig);
-            print "Saved plot to",dumpfig;
+            #print "Saved plot to",dumpfig;
           # sum of wf over each DTxDF bin
           wfsum = wf.sum(3).sum(1);
 #          print p,q,wfsum[0]
@@ -235,17 +235,17 @@ class MSResampler (object):
        	    for out_freq in range(nfreq1):
 		in_freq0 = self.freq0 + out_freq*dfreq - overlap_freq;
 		freqslice = slice(in_freq0, in_freq0 + dfreq1);
-		print "freqslice.shape",freqslice
+		#print "freqslice.shape",freqslice
 		data2 = data[:,freqslice,...];
-		print "wavel shape******=",wavel.shape
+		#print "wavel shape******=",wavel.shape
 		wavel1 = wavel[freqslice];
-		print"wave1 shape",wavel1.shape
+		#print"wave1 shape",wavel1.shape
 		
             # reshape so that NF becomes NF1,DF, so that we can then reduce over the second axis
             # resulting shape is DT1,NF1,DF,NCORR
 #            print timeslice,data.shape,(dtime1,nfreq1,dfreq,self.ncorr)
 	    	import Pyxis
-	    	print "data shape",data.shape
+	    	#print "data shape",data.shape
 	    	Pyxis.info('shape dtime1%i, shape nfreq1%i, shape dfreq%i'%(dtime1,nfreq1,dfreq))
           ##data = data.reshape((dtime1,nfreq1,dfreq,self.ncorr))
 		
@@ -263,8 +263,8 @@ class MSResampler (object):
 			wl0 = wavel1[dfreq1/2];
 		else:
 			wl0 = (wavel1[dfreq1/2 -1] + wavel1[dfreq/2])/2;
-		print "uvd1.shape",uvd1.shape
-		print "wl0.shape",wl0.shape
+		#print "uvd1.shape",uvd1.shape
+		#print "wl0.shape",wl0.shape
             	uvd1 = uvd1[:,np.newaxis] / wl0;
             # now for the second component: ||uv0||/wl0 at each window is the centre channel uv-length,
             # the second component's distance is ||uv0||/wl - ||uv0||/wl0
@@ -275,7 +275,7 @@ class MSResampler (object):
             # evaluate windowing function
             # shapes are: uvd1 is DT1,NF1 and uvd2 is NF1,DF so insert new axes appropriately
             # wf shape is then DT1,NF1,DF
-		print "uvd1.shape,uvd2.shape",uvd1.shape,uvd2.shape
+		#print "uvd1.shape,uvd2.shape",uvd1.shape,uvd2.shape
             	wf = window_function(uvd1[:,:],uvd2[np.newaxis,:]);
 		#ham1 = signal.hamming(len(wf[:,0]))*np.max(wf[:,0])
 		#ham2 = signal.hamming(len(wf[0,:]))*np.max(wf[0,:])
@@ -309,11 +309,11 @@ class MSResampler (object):
 	  #	pylab.show()
 	  #  	reswind[out_time]=wf[:,0,dfreq/2]
 	  #	result.append((p,q,wf[:,0,dfreq/2]))
-		print "##data2.shape",data2.shape
-		print "###wf.shape",wf.shape
-		print "###wsum.shape",wfsum
-		print "###resdata.shape",resdata.shape
-		print "###content .shape",((data2*wf[...,np.newaxis]).sum(1).sum(0)).shape
+		#print "##data2.shape",data2.shape
+		#print "###wf.shape",wf.shape
+		#print "###wsum.shape",wfsum
+		#print "###resdata.shape",resdata.shape
+		#print "###content .shape",((data2*wf[...,np.newaxis]).sum(1).sum(0)).shape
 		resdata[out_time,out_freq,...] = (data2*wf[...,np.newaxis]).sum(1).sum(0)/wfsum;
             #resdata[out_time,...] = (data*wf[...,np.newaxis]).sum(2).sum(0)/wfsum[...,np.newaxis];
           # return result

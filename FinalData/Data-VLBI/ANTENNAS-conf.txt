@@ -1,0 +1,3 @@
+
+We used 9 EVN GROUND-BASED stations :EF, HH, JB, NT, ON, TR, YS, WB, SH. The longest baseline here is ~10161Km and the shortest baseline
+~267m

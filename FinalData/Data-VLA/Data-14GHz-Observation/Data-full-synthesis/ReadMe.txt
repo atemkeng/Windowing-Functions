@@ -3,7 +3,7 @@ This readMe described the structure of our configurations files.
 We have simulated a hi-resolution dataset at 14GHz sampled at each 1s over a duration of 30min30s. see below the configuration:
 
 
-start Frequency or centre frequency = 14 MHz
+start Frequency or centre frequency = 14 GHz
 
 step frequency or channels width of this hires dataset = 1000000.Hz=1MHz
 

@@ -16,3 +16,6 @@ The data :
 2- pickle-0.1s-bw25KHz.data: resampled 0.1s in time and 25KHz in frequency
 
 3-pickle-0.25s-bw25KHz.dataP resampled 0.25s in time and 25KHz in frequency
+
+
+############ Please use the radius in pickle-0.01s-bw12.5KHz.data to plot all averaging

@@ -19,7 +19,7 @@ data:  vlbi-FoV0.26deg-int0.25s-bandwidth0.05MHz.data
 	
 	bessel-4x3: 
 	
-	bessel-4x5:
+	bessel-5x5:
 
 
  
@@ -30,7 +30,7 @@ data:  vlbi-FoV0.26deg-int0.5s-bandwidth0.025MHz.data
 
 	bessel-4x3: 
 	
-	bessel-4x5:
+	bessel-5x5:
 
 
 
